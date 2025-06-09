@@ -2,16 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import 'dashboard.dart';
-import 'sign_up_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -21,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Log In')),
+      appBar: AppBar(title: const Text('Sign Up')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -57,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     try {
                       await context
                           .read<AuthProvider>()
-                          .signIn(_emailController.text, _passwordController.text);
+                          .signUp(_emailController.text, _passwordController.text);
                       if (mounted) {
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
@@ -65,21 +64,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         );
                       }
                     } catch (e) {
-                      setState(() => _error = 'Login failed');
+                      setState(() => _error = 'Sign up failed');
                     }
                   }
                 },
-                child: const Text('Log In'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (_) => const SignUpScreen(),
-                    ),
-                  );
-                },
-                child: const Text('Create an account'),
+                child: const Text('Sign Up'),
               ),
             ],
           ),
@@ -88,3 +77,4 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 }
+
