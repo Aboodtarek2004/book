@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
@@ -54,17 +55,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 onPressed: () async {
                   if (_formKey.currentState!.validate()) {
                     try {
+                      // Pass isDoctor to the signUp method
                       await context
                           .read<AuthProvider>()
-                          .signUp(_emailController.text, _passwordController.text);
+                          .signUp(_emailController.text, _passwordController.text, isDoctor);
                       if (mounted) {
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
-                              builder: (_) => Dashboard(isDoctor: isDoctor)),
+                              builder: (_) => const Dashboard()), // Removed isDoctor argument
                         );
                       }
+                    } on FirebaseAuthException catch (e) {
+                      setState(() => _error = e.message ?? 'Sign up failed');
                     } catch (e) {
-                      setState(() => _error = 'Sign up failed');
+                      setState(() => _error = 'An unknown error occurred.');
                     }
                   }
                 },

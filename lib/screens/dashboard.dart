@@ -7,12 +7,14 @@ import '../models/doctor.dart';
 import 'booking_screen.dart';
 
 class Dashboard extends StatelessWidget {
-  final bool isDoctor;
-  const Dashboard({super.key, required this.isDoctor});
+  const Dashboard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final user = context.watch<AuthProvider>().user;
+    final authProvider = context.watch<AuthProvider>(); // Get AuthProvider
+    final user = authProvider.firebaseUser; // Get Firebase user
+    final isDoctor = authProvider.isDoctor; // Get isDoctor status
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Dashboard'),
@@ -57,7 +59,7 @@ class Dashboard extends StatelessWidget {
                           title: Text(doc.name),
                           subtitle: Text(doc.specialty),
                           onTap: () {
-                            if (!isDoctor) {
+                            if (!isDoctor) { // Use isDoctor from AuthProvider
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (_) => BookingScreen(doctor: doc),

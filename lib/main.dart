@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Added
+import 'package:cloud_firestore/cloud_firestore.dart'; // Added
 
+import 'services/auth_service.dart'; // Added
 import 'providers/auth_provider.dart';
 import 'providers/appointment_provider.dart';
 import 'screens/login_screen.dart';
@@ -19,9 +22,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Create instances of FirebaseAuth and FirebaseFirestore
+    final firebaseAuth = FirebaseAuth.instance;
+    final firebaseFirestore = FirebaseFirestore.instance;
+
+    // Create AuthService instance
+    final authService = AuthService(auth: firebaseAuth, firestore: firebaseFirestore);
+
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(authService: authService, firestore: firebaseFirestore),
+        ),
         ChangeNotifierProvider(create: (_) => AppointmentProvider()),
       ],
       child: MaterialApp(
@@ -29,7 +41,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(primarySwatch: Colors.blue),
         home: Consumer<AuthProvider>(
           builder: (context, auth, _) =>
-              auth.isLoggedIn ? const Dashboard(isDoctor: false) : const LoginScreen(),
+              auth.isLoggedIn ? const Dashboard() : const LoginScreen(), // Corrected Dashboard instantiation
         ),
       ),
     );
