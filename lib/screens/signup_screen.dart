@@ -2,41 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import 'dashboard.dart';
-import 'signup_screen.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool isDoctor = false;
   String _error = '';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Log In')),
+      appBar: AppBar(title: const Text('Sign Up')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              ToggleButtons(
-                isSelected: [!isDoctor, isDoctor],
-                onPressed: (index) {
-                  setState(() => isDoctor = index == 1);
-                },
-                borderRadius: BorderRadius.circular(8),
-                children: const [Text('Patient'), Text('Doctor')],
-              ),
-              const SizedBox(height: 16),
               TextFormField(
                 controller: _emailController,
                 decoration: const InputDecoration(labelText: 'Email Address'),
@@ -57,27 +46,20 @@ class _LoginScreenState extends State<LoginScreen> {
                     try {
                       await context
                           .read<AuthProvider>()
-                          .signIn(_emailController.text, _passwordController.text);
+                          .signUp(_emailController.text, _passwordController.text);
                       if (mounted) {
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
-                              builder: (_) => Dashboard(isDoctor: isDoctor)),
+                            builder: (_) => const Dashboard(isDoctor: false),
+                          ),
                         );
                       }
                     } catch (e) {
-                      setState(() => _error = 'Login failed');
+                      setState(() => _error = 'Sign up failed');
                     }
                   }
                 },
-                child: const Text('Log In'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const SignupScreen()),
-                  );
-                },
-                child: const Text('Create Account'),
+                child: const Text('Sign Up'),
               ),
             ],
           ),
