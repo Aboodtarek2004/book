@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import '../providers/auth_provider.dart';
 import 'dashboard.dart';
 
@@ -63,7 +65,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               builder: (_) => Dashboard(isDoctor: isDoctor)),
                         );
                       }
-                    } catch (e) {
+                    } on FirebaseAuthException catch (e) {
+                      setState(() => _error = e.message ?? 'Sign up failed');
+                    } catch (_) {
                       setState(() => _error = 'Sign up failed');
                     }
                   }
