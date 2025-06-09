@@ -20,6 +20,10 @@ class AuthProvider extends ChangeNotifier {
     await _authService.signIn(email, password);
   }
 
+  Future<void> signUp(String email, String password) async {
+    await _authService.signUp(email, password);
+  }
+
   Future<void> signOut() async {
     await _authService.signOut();
   }
